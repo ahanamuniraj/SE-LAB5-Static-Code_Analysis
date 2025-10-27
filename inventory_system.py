@@ -2,16 +2,11 @@ import json
 import logging
 from datetime import datetime
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 stock_data = {}
 
-
 def add_item(item="default", qty=0, logs=None):
-    """Add an item and quantity to the inventory."""
     if logs is None:
         logs = []
     if not isinstance(item, str):
@@ -22,9 +17,7 @@ def add_item(item="default", qty=0, logs=None):
     logs.append(f"{datetime.now()}: Added {qty} of {item}")
     logging.info("Added %d of %s", qty, item)
 
-
 def remove_item(item, qty):
-    """Remove a quantity of an item from inventory."""
     try:
         stock_data[item] -= qty
         if stock_data[item] <= 0:
@@ -37,14 +30,10 @@ def remove_item(item, qty):
     except (TypeError, OSError) as e:
         logging.error("Error removing item '%s': %s", item, e)
 
-
 def get_qty(item):
-    """Return quantity of an item."""
     return stock_data.get(item, 0)
 
-
 def load_data(file_name="inventory.json"):
-    """Load inventory data from file."""
     try:
         with open(file_name, "r", encoding="utf-8") as file:
             data = json.load(file)
@@ -58,9 +47,7 @@ def load_data(file_name="inventory.json"):
         logging.error("Invalid JSON in %s.", file_name)
         stock_data.clear()
 
-
 def save_data(file_name="inventory.json"):
-    """Save inventory data to file."""
     try:
         with open(file_name, "w", encoding="utf-8") as file:
             json.dump(stock_data, file, indent=4)
@@ -68,9 +55,7 @@ def save_data(file_name="inventory.json"):
     except OSError as e:
         logging.error("File write error: %s", e)
 
-
 def print_data():
-    """Display all items and quantities."""
     logging.info("Items Report:")
     if not stock_data:
         logging.info("No items in inventory.")
@@ -78,14 +63,10 @@ def print_data():
     for item, qty in stock_data.items():
         logging.info("%s -> %d", item, qty)
 
-
 def check_low_items(threshold=5):
-    """Return list of items below threshold."""
     return [item for item, qty in stock_data.items() if qty < threshold]
 
-
 def main():
-    """Main function for testing inventory operations."""
     try:
         add_item("apple", 10)
         add_item("banana", -2)
@@ -101,7 +82,6 @@ def main():
         logging.error("Value error: %s", e)
     except (RuntimeError, OSError) as e:
         logging.error("Runtime or OS error: %s", e)
-
 
 if __name__ == "__main__":
     main()
